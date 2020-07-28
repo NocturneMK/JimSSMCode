@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wat.mapper.CustomerTicketMapper">
+        <resultMap type="com.wat.bean.Customer" id="customerResultMap">
+                     <id     column="customerId"   property="customerId"/>
+	                 <result column="customerName"   property="customerName"/>
+	                 <result column="customerTel"   property="customerTel"/>
+	                 
+	                 <!--一对多 -->
+	                 <collection property="lists"  ofType="com.wat.bean.Ticket">
+	                             <id     column="ticketId"   property="ticketId"/>
+				                 <result column="ticketAddress"   property="ticketAddress"/>
+				                 <result column="ticketPrice"   property="ticketPrice"/>
+				                 <result column="ticketCId"   property="ticketCId"/>
+	                 </collection>
+        </resultMap>
+        <select id="findBycustomerName"  parameterType="java.lang.String"   resultMap="customerResultMap">
+                    select  t.*,c.*   from  t_ticket  t,t_customer c  
+                    where    c.customerId=t.ticketCId  and   c.customerName=#{customerName} 
+        </select>
+</mapper>

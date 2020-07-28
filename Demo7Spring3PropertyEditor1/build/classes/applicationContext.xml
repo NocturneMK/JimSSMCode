@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+	<bean id="user1" class="com.jim.bean.UserInfo">
+		<property name="name">
+			<value>再也没有</value>
+		</property>
+		<property name="sex">
+			<value>男</value>
+		</property>
+		<property name="date">
+			<value>1996/2/24</value>
+		</property>
+	</bean>
+	
+	<!-- 对bean类属性值进行编辑 -->
+	<bean id="customEditorConfigurer" 	class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+		<property name="customEditors">
+			<map>
+				<entry key="java.util.Date"> <!--map里面的key  是setValue的类型 -->
+				    <!-- map里面的value --> 
+					<bean  class="com.jim.util.MyDateEditor" >
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+</beans>

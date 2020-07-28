@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wat.mapper.UserMapper">
+         <select id="findUserByName"   resultType="user"  parameterType="com.wat.bean.UserQueryVo">
+                    select  * from   tb_user   
+                    <where>
+                            <include refid="sqlif"></include>
+                    </where>
+         </select>
+          <select id="findUserCount"   resultType="int"  parameterType="com.wat.bean.UserQueryVo">
+                    select  count(*)  from   tb_user
+                     <where>
+                             <include refid="sqlif"></include>
+                    </where>
+         </select>
+         <sql id="sqlif">
+                   <if test="userInfo!=null"><!-- test:条件 -->
+                                         <if test="userInfo.username!=null  and  userInfo.username!=''">
+                                                  and  username=#{userInfo.username} 
+                                         </if>
+                                         <if test="userInfo.password!=null  and  userInfo.password!=''">
+                                                  and  password=#{userInfo.password}
+                                         </if>
+                   </if>
+         </sql>
+</mapper>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wat.mapper.UserMapper">
+         <resultMap type="user" id="userResultMap11"><!-- type:对应的实体类，pojo类   id:给resultMap取名字 -->
+                      <id    column="id"    property="id"/><!-- 主键 -->
+                      <result column="username"   property="name"/><!-- 属性名跟列名一一对应 -->
+                      <result column="password"   property="mima"/>
+         </resultMap>
+         <select id="findUserById"   resultMap="userResultMap11"  parameterType="int">
+                    select  *  from   tb_user  where     id=#{id}
+         </select>
+</mapper>

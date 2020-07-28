@@ -1,0 +1,77 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd "> 
+    <!-- 加载db.properties文件中的内容，db.properties文件中key命名要有一定的特殊规则 -->
+	<context:property-placeholder location="classpath:db.properties" />
+	<!-- 配置数据源 ，dbcp -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxActive" value="30" />
+		<property name="maxIdle" value="5" />
+	</bean>
+ 
+ 
+    <!-- 创建userDAO对象
+         dataSource是JdbcDaoSupport的属性名，所以赋值也是给它赋值。
+     -->
+    <bean   id="userDAO"   class="com.wat.dao.impl.UserDAOImpl">
+              <property name="dataSource" ref="dataSource"></property>
+    </bean>
+ 
+    <!-- 定义事务管理器 -->
+    <bean  id="transactionManager"        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+              <property name="dataSource"><ref bean="dataSource"/></property>
+    </bean>
+    
+    
+    
+    <!-- 定义事务代理 -->
+     <!-- 使用TransactionProxyFactoryBean需要注入它所依赖的事务管理器，设置代理的目标对象，代理对象的生产方式和事务属性。
+              代理对象是在目标对象上生成的包含事务和AOP切面的新的对象，它可以赋给目标的引用来替代目标对象，
+              以支持事务或AOP提供的切面功能。
+     -->
+    <bean  id="transactionProxy"      class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+               <!-- 事务代理类中有事务管理器属性 -->
+               <property name="transactionManager"><ref  bean="transactionManager"/></property>
+               
+               <!-- 把userDao对象设置为目标对象，目标对象是我们要代理的对象 -->
+               <property name="target"  ref="userDAO">        </property>
+               
+               <!-- 指定直接对类进行代理，将属性proxyTargetClass指定为true（默认是false，对接口进行代理） -->
+               <property name="proxyTargetClass"  value="true"></property>
+               
+               <property name="transactionAttributes">
+                        <props>
+                            <!--
+                               1.PROPAGATION_REQUIRED：
+                                                                               支持当前事务，如果当前没有事务，就新建一个事务。这是常见的选择
+                                                                               适用于处理一个或者多个交叉insert,update,delete.
+                                                                               
+                               2. PROPAGATION_SUPPORTS-支持当前事务，如果当前没有事务，就以非事务方式执行。
+                                                                           （适用于处理一个或多个交叉insert,update,delete，query） 
+                                           
+                               3.PROPAGATION_MANDATORY-支持当前事务，如果当前没有事务，就抛出异常。
+                            
+                            key:可以写*:对所有方法都执行事务
+                              -->
+                             <prop key="add">PROPAGATION_REQUIRED</prop>        
+                        </props>
+               </property>
+    </bean>
+    
+</beans>

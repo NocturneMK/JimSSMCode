@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wat.mapper.UserMapper">
+         <select id="findUserById"   resultType="com.wat.bean.User"  parameterType="int">
+                    select  *  from   tb_user  where     id=#{id}
+         </select>
+         <select id="findUserByName"   resultType="com.wat.bean.User"  parameterType="java.lang.String">
+                    select  * from   tb_user  where    username=#{username}
+         </select>
+         <select id="findUserAll"   resultType="com.wat.bean.User"  >
+                    select  *  from   tb_user
+         </select>
+         <select id="findUserByPage"   resultType="com.wat.bean.User"  parameterType="int">
+                    select  *  from   tb_user  limit  #{index},5
+                    <!-- index:下标  不是页数 -->
+         </select>
+         <insert id="insertUser"      parameterType="com.wat.bean.User">
+                   insert  into  tb_user(username,password) values (#{username},#{password})
+                   <!-- 注意：oracle是用values -->
+         </insert>
+         <delete id="deleteUser"    parameterType="int">
+                   delete  from   tb_user  where    id=#{id}
+         </delete>
+         <update id="updateUser"   parameterType="com.wat.bean.User">
+                   update   tb_user  set  username=#{username},password=#{password} where  id=#{id}
+         </update>
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+     <bean   id="xtz"  class="com.wat.util.ProductUtil"></bean>
+     
+     <bean  id="productDAOImpl6"  class="com.wat.dao.impl.ProductDAOImpl">
+         <!-- 引用其他的bean -->
+         <!--<property name="productUtil"  ref="xtz"></property> -->
+              <property name="productUtil">
+                    <!--错误，不要使用local，用bean  -->
+                    <!-- <ref  local="xtz"/>   -->
+                    <ref  bean="xtz"/>
+              </property>
+              <!-- 跟属性赋值，但是赋值的对象是bean -->
+     </bean>
+</beans>

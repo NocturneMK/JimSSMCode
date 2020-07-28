@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wat.mapper.UserMapper">
+         <select id="findUserByList"   resultType="com.wat.bean.UserInfo"  parameterType="com.wat.bean.UserQueryVo">
+                    select  * from   tb_user  
+                    <where>
+                            <if test="lists!=null">
+                                       <foreach collection="lists"  item="user_id"  open="id in("  close=")"  separator="," >
+                                               #{user_id}
+                                       </foreach>
+                            </if>
+                    </where>
+         </select>
+</mapper>
+<!-- 
+
+     collection:  是我们要遍历的List集合
+   
+     user_id:   for (Integer user_id : ids) {
+				
+			    }
+	
+	open:  以什么开始		    
+	
+	close:  以什么结束
+	
+	separator:user_id以什么为间隔   看下面就是or  
+=======================第一种foreach====================================
+	  SELECT   * FROM   tb_user WHERE  (id=3 OR id=4  OR  id=5);
+	 <foreach collection="ids"  item="user_id"  open="("    close=")" separator="or" > 
+		                     id=#{user_id} 
+     </foreach>
+
+=======================第二种foreach===============================
+      SELECT  * FROM    tb_user  WHERE   id  IN(3,4,5);
+    
+     <foreach collection="ids"  item="user_id"  open="id  in("    close=")" separator="," > 
+		                     #{user_id} 
+     </foreach>
+
+
+
+
+foreach的主要用在构建in条件中，它可以在SQL语句中进行迭代一个集合。
+foreach元素的属性主要有 item，index，collection，open，separator，close。
+
+collection:在使用foreach的时候最关键的也是最容易出错的属性，该属性是必须指定的，但是在不同情况 下，该属性的值是不一样的
+
+item表示集合中每一个元素进行迭代时的别名，
+
+index指 定一个名字，用于表示在迭代过程中，每次迭代到的位置，
+
+open表示该语句以什么开始，
+
+close表示以什么结束，
+
+separator表示在每次进行迭代之间以什么符号作为分隔 符，
+
+ -->

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	
+	 xmlns:aop="http://www.springframework.org/schema/aop"   
+	
+	xmlns:p="http://www.springframework.org/schema/p"
+   
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+	                    http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	                    http://www.springframework.org/schema/aop 
+	                    http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+	                    
+	<!-- 
+        proxy-target-class="true"  	CGLib动态代理技术织入增强    说明可以用自身接收或者接口接收。
+	    
+	    
+	    proxy-target-class="false"  jdk代理，说明只能用接口接收，不能用自身接收，
+	         如果自身接收就会报错om.sun.proxy.$Proxy7 cannot be cast to com.wat.service.impl.PersonServiceImpl
+	at com.wat.test.Test1AOP1.main(Test1AOP1.java:27)  
+	    
+	    
+	 -->           
+	 <!-- 
+			      通过配置织入@Aspectj切面 
+			      虽然可以通过编程的方式织入切面，但是一般情况下，我们还是使用spring的配置自动完成创建代理织入切面的工作。 
+			      通过aop命名空间的<aop:aspectj-autoproxy/>声明自动为spring容器中那些配置@aspectJ切面的bean创建代理，织入切面。当然，spring 
+			      在内部依旧采用AnnotationAwareAspectJAutoProxyCreator进行自动代理的创建工作，但具体实现的细节已经被<aop:aspectj-autoproxy 
+			/>隐藏起来了 
+			    <aop:aspectj-autoproxy/>有一个proxy-target-class属性，默认为false，表示使用jdk动态代理织入增强，当配为<aop:aspectj-autoproxy  
+			poxy-target-class="true"/>时，表示使用CGLib动态代理技术织入增强。不过即使proxy-target-class设置为false，如果目标类没有声明接口，则spring将自动使用CGLib动态代理。 
+     -->         
+    <aop:aspectj-autoproxy  proxy-target-class="false"></aop:aspectj-autoproxy>
+    <bean   id="myAspect"   class="com.wat.aspect.PersonAspect"></bean>
+  
+    
+    <aop:config>
+              <aop:aspect   id="asp" ref="myAspect"  >
+                  <!-- 声明切入点anyMethod方法   
+                       execution：执行的意思
+                       *        ：函数的返回值类型
+                       *        ：函数名
+                       ..       :任何参数
+                    -->
+                  <aop:pointcut expression="execution(*  com.wat.service.impl.PersonServiceImpl.*(..))" id="anyMethod"/>
+                  <!--声明一个前置通知  -->
+                  <aop:before method="doAccessCheck"              pointcut-ref="anyMethod" />
+                  <!-- 声明一个后置通知   -->
+                  <aop:after-returning method="doAfterReturing"   pointcut-ref="anyMethod"/>
+                  
+                  <!-- 声明一个最终通知 -->
+                  <!--
+                  <aop:after method="doAfter" pointcut-ref="anyMethod"></aop:after>
+                  --> 
+                  
+                  <!-- 拦截的方法得有参数，而且第一个参数得是int型 -->
+                  <aop:after method="doAfter1" pointcut="execution(* com.wat.service.impl.PersonServiceImpl.*(int,..)) and args(p)" arg-names="p" ></aop:after>
+                  
+                  <aop:after-throwing method="doAfterThrowing"  pointcut-ref="anyMethod"/>
+                 
+                  <!-- 声明一个环绕通知 -->
+                  <aop:around method="doAround"                 pointcut-ref="anyMethod"/>   
+              </aop:aspect>
+    </aop:config>
+    <bean   id="personService"  class="com.wat.service.impl.PersonServiceImpl"></bean>
+</beans>

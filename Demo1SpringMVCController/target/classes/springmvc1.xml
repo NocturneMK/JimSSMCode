@@ -1,0 +1,48 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd ">
+       
+      
+        <!-- 第一步：处理器映射器 
+		            处理器映射器 将bean的name作为url进行查找 ，需要在配置Handler时指定beanname（就是url） 
+			    所有的映射器都实现 HandlerMapping接口。
+			    
+			  处理器映射器根据url找到具体的Controller，生成处理器对象及处理器拦截器(如果有则生成)一并返回给DispatcherServlet
+		-->
+		<bean   class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"></bean>
+		<!--简单的url映射  -->
+        <bean  class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+                <property name="mappings">
+                           <props>
+                                <prop key="/queryItems.action">idcardController</prop><!-- 找处理器 -->
+                           </props>
+                </property>
+        </bean>
+        
+         <!--第二步： HandlerAdapter处理器适配器
+                                  调用处理器
+          -->  
+        <bean    class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+        
+         <!-- 第三步： 创建处理器对象   -->
+        <bean   id="idcardController"  class="com.wat.ssm.controller.IdcardController2"></bean>
+        
+        <!-- 第四步：视图解析器 -->
+        <bean   class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                <!-- 配置jsp路径的前缀 -->
+				<property name="prefix" value="/WEB-INF/page/"/>
+				<!-- 配置jsp路径的后缀 -->
+				<property name="suffix" value=".jsp"/>
+        </bean>
+</beans>

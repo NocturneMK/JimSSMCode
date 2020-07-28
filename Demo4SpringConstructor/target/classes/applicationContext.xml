@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+     
+     <!-- 利用构造器赋值    index:代表参数的下标 -->
+     <!-- Product  product2=new  Product(2,"java web",8.88); -->
+     <bean   id="product2"   class="com.wat.bean.Product">
+               <constructor-arg  index="0"><value>2</value></constructor-arg>
+               <constructor-arg  index="2"><value>8.88</value></constructor-arg>
+               <constructor-arg  index="1"><value>java  web</value></constructor-arg>
+     </bean>
+</beans>
